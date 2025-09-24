@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Skills Progress</title>
+</head>
+<style>
+  li {
+    position: relative;
+  }
+  .html5-progress-percentage,
+  .css-progress-percentage,
+  .python-progress-percentage,
+  .php-progress-percentage,
+  .jquery-progress-percentage,
+  .nodejs-progress-percentage {
+    position: absolute;
+    top: 0%;
+  }
+  .html5-progress-percentage {
+    right: 20%
+  }
+  .css-progress-percentage {
+    right: 40%
+  }
+  .python-progress-percentage {
+    right: 20%
+  }
+  .nodejs-progress-percentage {
+    right: 65%
+  }
+  .jquery-progress-percentage {
+    right: 50%
+  }
+  .php-progress-percentage {
+    right: 35%
+  }
+</style>
+<body>
+    <ul>
+      <li>
+        <h2>Frontend</h2>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <h2>Backend</h2>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <p>HTML5</p>
+        <p class="html5-progress-percentage">80%</p>
+        <progress class="html5" value="80" max="100"></progress>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <p>Python</p>
+        <p class="python-progress-percentage">75%</p>
+        <progress class="python" value="75" max="100"></progress>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <p class="css-progress-percentage">60%</p>
+        <p>CSS3</p>
+        <progress class="css3" value="60" max="100"></progress>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <p>PHP</p>
+        <p class="php-progress-percentage">65%</p>
+        <progress class="php" value="65" max="100"></progress>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <p class="jquery-progress-percentage">50%</p>
+        <p>jQuery</p>
+        <progress class="jquery" value="50" max="100"></progress>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <p>Node.js</p>
+        <p class="nodejs-progress-percentage">35%</p>
+        <progress class="node-js" value="35" max="100"></progress>
+      </li>
+    </ul>
+</body>
+</html>
+
