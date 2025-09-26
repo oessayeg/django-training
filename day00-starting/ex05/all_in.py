@@ -14,7 +14,12 @@ def get_capital_cities_dict():
 
 
 def get_states_dict():
-    states = {"Oregon": "OR", "Alabama": "AL", "New Jersey": "NJ", "Colorado": "CO"}
+    states = {
+        "Oregon": "OR",
+        "Alabama": "AL",
+        "New Jersey": "NJ",
+        "Colorado": "CO"
+    }
     return states
 
 
@@ -51,8 +56,12 @@ def get_capital_city(state):
 
 
 def get_parsed_argument_as_list(script_arg):
+    if ",," in script_arg:
+        return None
     split_arg = script_arg.split(",")
-    cleaned_list_from_spaces = [city_or_state.strip() for city_or_state in split_arg]
+    cleaned_list_from_spaces = [
+        city_or_state.strip() for city_or_state in split_arg
+    ]
     cleaned_list_from_empty_strings = [
         city_or_state
         for city_or_state in cleaned_list_from_spaces
@@ -67,20 +76,26 @@ def print_is_capital_or_state(argument):
     state = get_state(argument)
 
     if capital_city is None and state is None:
-        print(f"{argument} is neither a capital city or state")
-    if capital_city:
+        print(f"{argument} is neither a capital city nor a state")
+    elif capital_city:
         print(f"{capital_city} is the capital of {argument}")
-    if state:
+    elif state:
         print(f"{argument} is the capital of {state}")
 
 
 def all_in(argument):
     parsed_argument_as_list = get_parsed_argument_as_list(argument)
+    if parsed_argument_as_list is None:
+        return
     for state_or_city in parsed_argument_as_list:
         print_is_capital_or_state(state_or_city)
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) != 2:
         sys.exit()
     all_in(sys.argv[1])
+
+
+if __name__ == "__main__":
+    main()
