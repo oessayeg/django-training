@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+
 from local_lib.path import Path
+
 
 def main():
     folder = Path("my_folder")
@@ -10,6 +13,7 @@ def main():
     content = file.read_text()
     print("File content:")
     print(content)
+
 
 if __name__ == "__main__":
     main()
