@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+
 class Text(str):
     """
     A Text class to represent a text you could use with your HTML elements.
@@ -36,16 +37,20 @@ class Elem:
 
         Obviously.
         """
-        # if content is not None and len(content) == 0:
-        #     raise Elem.ValidationError
-        if content is not None and not self.check_type(content):
+        if tag_type != "double" and tag_type != "simple":
             raise Elem.ValidationError
+
+        self.content = []
+        if content is not None:
+            self.add_content(content)
+        else:
+            self.content = []
+
         self.tag = tag
         self.attr = attr
-        self.content = content
         self.tag_type = tag_type
 
-    def __str__(self, depth=1):
+    def __str__(self):
         """
         The __str__() method will permit us to make a plain HTML representation
         of our elements.
@@ -56,11 +61,11 @@ class Elem:
         if self.tag_type == "double":
             result += (
                 f"<{self.tag}{self.__make_attr()}>"
-                f"{self.__make_content(depth)}"
+                f"{self.__make_content()}"
                 f"</{self.tag}>"
             )
         elif self.tag_type == "simple":
-            f"<{self.tag}{self.__make_attr()}/>"
+            result += f"<{self.tag}{self.__make_attr()}/>"
         return result
 
     def __make_attr(self):
@@ -72,63 +77,19 @@ class Elem:
             result += " " + str(pair[0]) + '="' + str(pair[1]) + '"'
         return result
 
-    def __make_text_content(
-        self,
-        textInstance,
-        element_position,
-        previous_element=None,
-        is_last_element=False,
-    ):
-        if len(textInstance) == 0:
-            return ""
-
-        text_content = ""
-        if element_position == 0 or isinstance(previous_element, Text):
-            text_content += "\n"
-        text_content += f"  {textInstance.__str__()}"
-        if is_last_element:
-            text_content += "\n"
-        return text_content
-
-    def __make_elem_content(self, elemInstance, depth, elementPosition):
-        result = ""
-
-        if elementPosition == 0:
-            result = "\n"
-        return result + (
-            f"{"  " * depth}{elemInstance.__str__(depth)}\n"
-        )
-
-    def __make_content(self, depth=1):
+    def __make_content(self):
         """
         Here is a method to render the content, including embedded elements.
         """
-
-        if self.content is None or len(self.content.__str__()) == 0:
+        if not self.content or len(str(self.content)) == 0:
             return ""
 
-        result = ""
-        if isinstance(self.content, list):
-            pass
-            for elementPosition, elem in enumerate(self.content):
-                if isinstance(elem, Text):
-                    previous_element = (
-                        self.content[elementPosition - 1]
-                        if elementPosition - 1 >= 0
-                        else None
-                    )
-                    result += self.__make_text_content(
-                        elem,
-                        elementPosition,
-                        previous_element,
-                        elementPosition == len(self.content) - 1,
-                    )
-                else:
-                    result += self.__make_elem_content(elem, depth, elementPosition)
-        elif isinstance(self.content, Text):
-            result += f"\n{" " * depth}{self.content.__str__()}{" "}\n"
-        else:
-            result += f"\n{"  " * depth}{self.content.__str__(depth + 1)}\n{"  " * (depth - 1)}"
+        result = "\n"
+
+        for elem in self.content:
+            if len(str(elem)) != 0:
+                result += f"{elem}\n"
+        result = "  ".join(line for line in result.splitlines(True))
         return result
 
     def add_content(self, content):
@@ -158,24 +119,22 @@ class Elem:
 
 
 if __name__ == "__main__":
-    test = Elem(tag="html", content=Elem(tag="body", content=Elem(tag="p", content=[Elem("h1"), Elem("h2")])))
-    print(test)
-    # html_content = Elem(
-    #     tag="html",
-    #     content=[
-    #         Elem("head", content=[Elem("title")]),
-    #         Elem(
-    #             "body",
-    #             content=[
-    #                 Elem("h1"),
-    #                 Elem(
-    #                     "img",
-    #                     attr={"src": "http://i.imgur.com/pfp3T.jpg"},
-    #                     tag_type="double",
-    #                 ),
-    #             ],
-    #         ),
-    #     ],
-    # )
+    html = Elem(
+        tag="html",
+        content=[
+            Elem("head", content=[Elem("title", content=Text("Hello ground!"))]),
+            Elem(
+                "body",
+                content=[
+                    Elem("h1", content=Text("Oh no, not again!")),
+                    Elem(
+                        "img",
+                        attr={"src": "http://i.imgur.com/pfp3T.jpg"},
+                        tag_type="simple",
+                    ),
+                ],
+            ),
+        ],
+    )
 
-    # print(html_content)
+    print(html)

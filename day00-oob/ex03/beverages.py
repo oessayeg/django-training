@@ -9,7 +9,7 @@ class HotBeverage:
     def __str__(self):
         return (
             f"name: {self.name}\n"
-            f"price: {self.price}\n"
+            f"price: {self.price:.2f}\n"
             f"description: {self.description()}"
         )
 

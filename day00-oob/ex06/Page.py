@@ -331,9 +331,7 @@ if __name__ == "__main__":
                                         Text("Text inside Span"),
                                         P(
                                             [
-                                                Text(
-                                                    "Text inside P"
-                                                ),
+                                                Text("Text inside P"),
                                                 Text("Text inside P"),
                                             ]
                                         ),
