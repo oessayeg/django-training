@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Ex01: Display process of a static page.
+{% endblock title %}
+
+{% block content %}
+    <h2>How Django Displays a Static Page</h2>
+
+    <ol>
+        <li>
+            <strong>Client Request:</strong>  
+            The browser sends an HTTP request (e.g., <code>GET /about/</code>) to the server.
+        </li>
+
+        <li>
+            <strong>URL Routing:</strong>  
+            Django checks <code>urls.py</code> to find which view corresponds to the requested path.
+        </li>
+
+        <li>
+            <strong>View Execution:</strong>  
+            The matched view function (e.g. <code>about_view</code>) is called.  
+            It usually calls <code>render()</code> to combine a template with a context dictionary.
+        </li>
+
+        <li>
+            <strong>Template Rendering:</strong>  
+            The template engine loads the HTML file (e.g. <code>about.html</code>), fills it with the given context,
+            and produces a complete HTML page.
+        </li>
+
+        <li>
+            <strong>Response Creation:</strong>  
+            Django wraps the rendered HTML in an <code>HttpResponse</code> object.
+        </li>
+
+        <li>
+            <strong>Middleware Processing:</strong>  
+            Response middleware can modify or add headers (e.g. security, caching, gzip compression).
+        </li>
+
+        <li>
+            <strong>Return to Client:</strong>  
+            The <code>HttpResponse</code> is sent back to the browser, which displays the page.
+        </li>
+    </ol>
+
+    <p>
+        If the page includes static files (CSS, JS, images), the browser will then send 
+        additional requests for those resources, which are served separately.
+    </p>
+{% endblock content %}

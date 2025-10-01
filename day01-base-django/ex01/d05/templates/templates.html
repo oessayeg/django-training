@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Ex01: Template engine.
+{% endblock title %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'style2.css' %}"/>
+{% endblock style %}
+
+{% block content %}
+    <h2>Functioning of Django’s default template engine</h2>
+  <p><strong>Django’s template engine</strong> takes an HTML-like template plus a context dictionary and 
+  renders a final HTML page. It supports variable substitution, filters, and tags for control flow.</p>
+
+  <p><strong>Blocks</strong> are placeholders that can be overridden in child templates when using 
+  template inheritance, helping to reuse a common layout.</p>
+
+  <p><strong>Loops (for ... in)</strong> let you iterate over items and also support an 
+  <code>{% templatetag openblock %} empty {% templatetag closeblock %}</code> clause when the list is empty.</p>
+
+  <p><strong>If control structures</strong> let you conditionally display content with 
+  <code>{% templatetag openblock %} if {% templatetag closeblock %}</code>, 
+  <code>{% templatetag openblock %} elif {% templatetag closeblock %}</code>, and 
+  <code>{% templatetag openblock %} else {% templatetag closeblock %}</code>.</p>
+
+  <p><strong>Context variables</strong> passed from the view are displayed with 
+  <code>{% templatetag openvariable %} variable {% templatetag closevariable %}</code>. 
+  By default they’re HTML-escaped; you can apply filters like 
+  <code>|upper</code> or <code>|default</code>.</p>
+{% endblock content %}
