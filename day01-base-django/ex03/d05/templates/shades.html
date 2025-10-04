@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Shades</title>
+    <style>
+        td, th {
+            height: 40px;
+            width: 80px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <th>Rouge</th>
+            <th>Vert</th>
+            <th>Noir</th>
+            <th>Bleu</th>
+        </thead>
+        <tbody>
+             {% for row in color_table %}
+                <tr>
+                    {% for color in row %}
+                        <td style="background-color: rgb({{ color.0 }}, {{ color.1 }}, {{ color.2 }});" />
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
