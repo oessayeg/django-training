@@ -18,7 +18,7 @@ def init(request):
         with connection.cursor() as cursor:
             try:
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS ex02_movies (
+                    CREATE TABLE IF NOT EXISTS ex04_movies (
                         title VARCHAR(64) NOT NULL UNIQUE,
                         episode_nb INT PRIMARY KEY,
                         opening_crawl TEXT,
@@ -73,7 +73,7 @@ def populate(request):
                 try:
                     cursor.execute(
                         """
-                        INSERT INTO ex02_movies (
+                        INSERT INTO ex04_movies (
                             episode_nb,
                             title,
                             director,
@@ -87,6 +87,7 @@ def populate(request):
                     http_response_message.append("OK")
                 except Exception as e:
                     http_response_message.append(f"Error initializing database: {e}")
+                    connection.rollback()
 
     return HttpResponse("<br>".join(http_response_message))
 
@@ -99,11 +100,34 @@ def display(request):
     ) as connection:
         with connection.cursor() as cursor:
             try:
-                cursor.execute("SELECT * FROM ex02_movies")
+                cursor.execute("SELECT * FROM ex04_movies")
                 data_list = cursor.fetchall()
 
                 if len(data_list) == 0:
                     return HttpResponse("No data available")
                 return render(request, "table.html", {"movies": data_list})
+            except Exception:
+                return HttpResponse("No data available")
+
+
+def remove(request):
+    with psycopg2.connect(
+        host=HOST,
+        database=DATABASE,
+        port=PORT,
+    ) as connection:
+        with connection.cursor() as cursor:
+            if request.method == "POST":
+                title = request.POST.get("movie_title")
+                cursor.execute("DELETE FROM ex04_movies WHERE title = %s", (title,))
+                connection.commit()
+            try:
+                cursor.execute("SELECT title FROM ex04_movies")
+                data_list = cursor.fetchall()
+                titles = [retrieved_data[0] for retrieved_data in data_list]
+
+                if len(data_list) == 0:
+                    return HttpResponse("No data available")
+                return render(request, "dropdown.html", {"titles": titles})
             except Exception:
                 return HttpResponse("No data available")
