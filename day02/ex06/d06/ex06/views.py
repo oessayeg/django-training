@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import psycopg2
 from d06 import settings
 
@@ -18,14 +18,29 @@ def init(request):
         with connection.cursor() as cursor:
             try:
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS ex04_movies (
+                    CREATE TABLE IF NOT EXISTS ex06_movies (
                         title VARCHAR(64) NOT NULL UNIQUE,
                         episode_nb INT PRIMARY KEY,
                         opening_crawl TEXT,
                         director VARCHAR(32) NOT NULL,
                         producer VARCHAR(128) NOT NULL,
-                        release_date DATE NOT NULL
+                        release_date DATE NOT NULL,
+                        created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
+                """)
+                cursor.execute("""
+                    CREATE OR REPLACE FUNCTION update_changetimestamp_column()
+                        RETURNS TRIGGER AS $$
+                        BEGIN
+                        NEW.updated = now();
+                        NEW.created = OLD.created;
+                        RETURN NEW;
+                        END;
+                        $$ language 'plpgsql';
+                        CREATE TRIGGER update_films_changetimestamp BEFORE UPDATE
+                        ON ex06_movies FOR EACH ROW EXECUTE PROCEDURE
+                        update_changetimestamp_column();
                 """)
                 connection.commit()
                 return HttpResponse("OK")
@@ -73,7 +88,7 @@ def populate(request):
                 try:
                     cursor.execute(
                         """
-                        INSERT INTO ex04_movies (
+                        INSERT INTO ex06_movies (
                             episode_nb,
                             title,
                             director,
@@ -100,7 +115,7 @@ def display(request):
     ) as connection:
         with connection.cursor() as cursor:
             try:
-                cursor.execute("SELECT * FROM ex04_movies")
+                cursor.execute("SELECT * FROM ex06_movies")
                 data_list = cursor.fetchall()
 
                 if len(data_list) == 0:
@@ -110,7 +125,7 @@ def display(request):
                 return HttpResponse("No data available")
 
 
-def remove(request):
+def update(request):
     with psycopg2.connect(
         host=HOST,
         database=DATABASE,
@@ -119,10 +134,15 @@ def remove(request):
         with connection.cursor() as cursor:
             if request.method == "POST":
                 title = request.POST.get("movie_title")
-                cursor.execute("DELETE FROM ex04_movies WHERE title = %s", (title,))
+                opening_crawl = request.POST.get("opening_crawl")
+                update_statement = """
+                    UPDATE ex06_movies SET opening_crawl = %s WHERE title = %s
+                """
+                cursor.execute(update_statement, (opening_crawl, title))
                 connection.commit()
+                return redirect("update")
             try:
-                cursor.execute("SELECT title FROM ex04_movies")
+                cursor.execute("SELECT title FROM ex06_movies")
                 data_list = cursor.fetchall()
                 titles = [retrieved_data[0] for retrieved_data in data_list]
 

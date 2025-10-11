@@ -86,7 +86,7 @@ def populate(request):
                     connection.commit()
                     http_response_message.append("OK")
                 except Exception as e:
-                    http_response_message.append(f"Error initializing database: {e}")
+                    http_response_message.append(f"Error inserting movie: {e}")
 
     return HttpResponse("<br>".join(http_response_message))
 
