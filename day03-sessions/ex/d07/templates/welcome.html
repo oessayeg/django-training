@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Pro Tips</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <p>Hello <span id="username">{{ user_name }}</span>!</p>
+        </nav>
+    </header>
+    <main>
+        <h1>Welcome to Life Pro Tips</h1>
+        <p>Your session username is valid for 42 seconds.</p>
+    </main>
+    <script>
+        function updateUsername() {
+            fetch('/username/')
+                .then(response => response.json())
+                .then(data => {
+                    const usernameElement = document.getElementById('username');
+                    if (usernameElement.textContent !== data.user_name) {
+                        usernameElement.textContent = data.user_name;
+                    }
+                })
+                .catch(error => console.error('Error fetching username:', error));
+        }
+
+        setInterval(updateUsername, 1000);
+    </script>
+</body>
+</html>
