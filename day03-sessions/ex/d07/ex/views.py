@@ -1,38 +1,82 @@
-import random
-import time
 from django.shortcuts import render
-from django.http import JsonResponse
-from d07 import settings
+from django.shortcuts import redirect
+from . import forms
+from . import models
 
-
-USERNAME_VALIDITY_SECONDS = 42
-
-
-def get_or_create_username(request):
-    current_time = time.time()
-    user_name = request.session.get('user_name')
-    timestamp = request.session.get('user_name_timestamp')
-
-    should_create_new = (
-        not user_name or
-        not timestamp or
-        (current_time - timestamp) >= USERNAME_VALIDITY_SECONDS
-    )
-
-    if should_create_new:
-        user_name = random.choice(settings.USER_NAMES)
-        request.session['user_name'] = user_name
-        request.session['user_name_timestamp'] = current_time
-
-    return user_name
 
 
 def ex(request):
-    """Main homepage view."""
-    user_name = get_or_create_username(request)
-    return render(request, 'welcome.html', {'user_name': user_name})
+    username = request.session.get("username")
+    return render(request, "welcome.html", {"username": username})
 
 
-def get_username(request):
-    user_name = get_or_create_username(request)
-    return JsonResponse({'user_name': user_name})
+def login(request):
+    username = request.session.get("username")
+    if username:
+        return redirect("/")
+    if request.method == "POST":
+        login_form = forms.LoginForm(request.POST)
+        if login_form.is_valid():
+            try:
+                user = models.User.objects.get(
+                    username=login_form.cleaned_data["username"]
+                )
+                if user.check_password(login_form.cleaned_data["password"]):
+                    request.session["username"] = login_form.cleaned_data["username"]
+                    return redirect("/")
+                else:
+                    return render(
+                        request,
+                        "login.html",
+                        {"error": "Invalid username or password", "form": login_form},
+                    )
+            except models.User.DoesNotExist:
+                return render(
+                    request,
+                    "login.html",
+                    {"error": "Invalid username or password", "form": login_form},
+                )
+        else:
+            return render(request, "login.html", {"form": login_form})
+    login_form = forms.LoginForm()
+    return render(request, "login.html", {"form": login_form})
+
+
+def registration(request):
+    username = request.session.get("username")
+    if username:
+        return redirect("/")
+    if request.method == "POST":
+        registration_form = forms.RegistrationForm(request.POST)
+        if registration_form.is_valid():
+            already_exists = models.User.objects.filter(
+                username=registration_form.cleaned_data["username"]
+            ).exists()
+            if already_exists:
+                return render(
+                    request,
+                    "registration.html",
+                    {"error": "Username already exists", "form": registration_form},
+                )
+            request.session["username"] = registration_form.cleaned_data["username"]
+            new_user = models.User(
+                username=registration_form.cleaned_data["username"]
+            )
+            new_user.set_password(registration_form.cleaned_data["password"])
+            new_user.save()
+            return redirect("/")
+        else:
+            return render(
+                request,
+                "registration.html",
+                {
+                    "form": registration_form,
+                },
+            )
+
+    registration_form = forms.RegistrationForm()
+    return render(request, "registration.html", {"form": registration_form})
+
+def logout(request):
+    request.session.clear()
+    return redirect("/")

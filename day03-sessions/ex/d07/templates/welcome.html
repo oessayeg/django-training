@@ -8,27 +8,24 @@
 <body>
     <header>
         <nav>
-            <p>Hello <span id="username">{{ user_name }}</span>!</p>
+            <a href="/">Life Pro Tips</a>
+            {% if not username %}
+            <p>
+                <a href="{% url 'login' %}">Login</a>
+            </p>
+            <p>
+                <a href="{% url 'registration' %}">Registration</a>
+            </p>
+            {% else %}
+            <div>
+                <p>Hello <span id="username">{{ username }}</span>!</p>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+            {% endif %}
         </nav>
     </header>
     <main>
         <h1>Welcome to Life Pro Tips</h1>
-        <p>Your session username is valid for 42 seconds.</p>
     </main>
-    <script>
-        function updateUsername() {
-            fetch('/username/')
-                .then(response => response.json())
-                .then(data => {
-                    const usernameElement = document.getElementById('username');
-                    if (usernameElement.textContent !== data.user_name) {
-                        usernameElement.textContent = data.user_name;
-                    }
-                })
-                .catch(error => console.error('Error fetching username:', error));
-        }
-
-        setInterval(updateUsername, 1000);
-    </script>
 </body>
 </html>
