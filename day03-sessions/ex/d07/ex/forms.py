@@ -1,5 +1,5 @@
 from django import forms
-
+from . import models
 
 
 class LoginForm(forms.Form):
@@ -19,3 +19,15 @@ class RegistrationForm(forms.Form):
         if password and password_confirmation and password != password_confirmation:
             self.add_error('password_confirmation', "Passwords do not match.")
         return cleaned_data
+
+
+class TipForm(forms.ModelForm):
+    class Meta:
+        model = models.Tip
+        fields = ["content"]
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4, 'cols': 50})
+        }
+        labels = {
+            'content': 'Tip'
+        }

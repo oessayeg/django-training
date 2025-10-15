@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
-# Create your models here.
-
 class User(models.Model):
     username = models.CharField(max_length=100, unique=True, null=False)
     password = models.CharField(max_length=128, null=False)
@@ -17,3 +15,12 @@ class User(models.Model):
 
     def __str__(self):
         return self.username
+
+
+class Tip(models.Model):
+    content = models.TextField(null=False)
+    author = models.ForeignKey(User, to_field='username', on_delete=models.CASCADE, null=False)
+    created = models.DateField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return f"Tip: {self.content} Author: {self.author}. Created: {self.created}"

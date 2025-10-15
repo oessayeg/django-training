@@ -4,10 +4,20 @@ from . import forms
 from . import models
 
 
-
 def ex(request):
     username = request.session.get("username")
-    return render(request, "welcome.html", {"username": username})
+    if username and request.method == "POST":
+        tip_form = forms.TipForm(request.POST)
+        if tip_form.is_valid():
+            tip = tip_form.save(commit=False)
+            tip.author_id = username
+            tip.save()
+            return redirect("/")
+        else:
+            return render(request, "welcome.html", {"username": username, "form": tip_form})
+    tip_form = forms.TipForm()
+    all_tips = models.Tip.objects.all().order_by("-created")
+    return render(request, "welcome.html", {"username": username, "form": tip_form, "all_tips": all_tips})
 
 
 def login(request):

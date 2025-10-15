@@ -20,12 +20,19 @@
             <div>
                 <p>Hello <span id="username">{{ username }}</span>!</p>
                 <a href="{% url 'logout' %}">Logout</a>
+                <ol>
+                    {% for tip in all_tips %}
+                    <li>{{ tip }}</li>
+                    {% endfor %}
+                </ol>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Submit</button>
+                </form>
             </div>
             {% endif %}
         </nav>
     </header>
-    <main>
-        <h1>Welcome to Life Pro Tips</h1>
-    </main>
 </body>
 </html>
