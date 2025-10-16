@@ -21,6 +21,8 @@ class Tip(models.Model):
     content = models.TextField(null=False)
     author = models.ForeignKey(User, to_field='username', on_delete=models.CASCADE, null=False)
     created = models.DateField(auto_now_add=True, null=True)
+    upvoted_by = models.ManyToManyField(User, related_name='upvoted_tips', blank=True)
+    downvoted_by = models.ManyToManyField(User, related_name='downvoted_tips', blank=True)
 
     def __str__(self):
         return f"Tip: {self.content} Author: {self.author}. Created: {self.created}"

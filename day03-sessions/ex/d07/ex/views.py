@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
+from django.db.models import Count, Exists, OuterRef
 from . import forms
 from . import models
 
@@ -14,10 +14,25 @@ def ex(request):
             tip.save()
             return redirect("/")
         else:
-            return render(request, "welcome.html", {"username": username, "form": tip_form})
+            return render(
+                request, "welcome.html", {"username": username, "form": tip_form}
+            )
     tip_form = forms.TipForm()
-    all_tips = models.Tip.objects.all().order_by("-created")
-    return render(request, "welcome.html", {"username": username, "form": tip_form, "all_tips": all_tips})
+    all_tips = models.Tip.objects.annotate(
+        total_upvotes=Count("upvoted_by"),
+        total_downvotes=Count("downvoted_by"),
+        is_upvoted=Exists(
+            models.User.objects.filter(upvoted_tips=OuterRef("pk"), username=username)
+        ),
+        is_downvoted=Exists(
+            models.User.objects.filter(downvoted_tips=OuterRef("pk"), username=username)
+        ),
+    ).all()
+    return render(
+        request,
+        "welcome.html",
+        {"username": username, "form": tip_form, "all_tips": all_tips},
+    )
 
 
 def login(request):
@@ -69,9 +84,7 @@ def registration(request):
                     {"error": "Username already exists", "form": registration_form},
                 )
             request.session["username"] = registration_form.cleaned_data["username"]
-            new_user = models.User(
-                username=registration_form.cleaned_data["username"]
-            )
+            new_user = models.User(username=registration_form.cleaned_data["username"])
             new_user.set_password(registration_form.cleaned_data["password"])
             new_user.save()
             return redirect("/")
@@ -87,6 +100,46 @@ def registration(request):
     registration_form = forms.RegistrationForm()
     return render(request, "registration.html", {"form": registration_form})
 
+
 def logout(request):
     request.session.clear()
+    return redirect("/")
+
+
+def tip_action(request, tip_id):
+    username = request.session.get("username")
+
+    if not username:
+        return redirect("/")
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        if action == "delete":
+            tip = models.Tip.objects.filter(id=tip_id).first()
+            if tip:
+                tip.delete()
+        else:
+            tip = models.Tip.objects.filter(id=tip_id).first()
+            user = models.User.objects.filter(username=username).first()
+            
+            if tip and user:
+                is_upvoted = tip.upvoted_by.filter(username=username).exists()
+                is_downvoted = tip.downvoted_by.filter(username=username).exists()
+                
+                if action == "upvote":
+                    if is_upvoted:
+                        tip.upvoted_by.remove(user)
+                    else:
+                        if is_downvoted:
+                            tip.downvoted_by.remove(user)
+                        tip.upvoted_by.add(user)
+                elif action == "downvote":
+                    if is_downvoted:
+                        tip.downvoted_by.remove(user)
+                    else:
+                        if is_upvoted:
+                            tip.upvoted_by.remove(user)
+                        tip.downvoted_by.add(user)
+
     return redirect("/")

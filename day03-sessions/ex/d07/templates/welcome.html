@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Life Pro Tips</title>
+    <style>
+        li {
+            padding-top: 5px;
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
             <a href="/">Life Pro Tips</a>
             {% if not username %}
+            {% for tip in all_tips %}
+                <li>{{ tip }} - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
+            {% endfor %}
             <p>
                 <a href="{% url 'login' %}">Login</a>
             </p>
@@ -20,11 +28,19 @@
             <div>
                 <p>Hello <span id="username">{{ username }}</span>!</p>
                 <a href="{% url 'logout' %}">Logout</a>
-                <ol>
-                    {% for tip in all_tips %}
-                    <li>{{ tip }}</li>
-                    {% endfor %}
-                </ol>
+                    <ol>
+                        {% for tip in all_tips %}
+                        <li>{{ tip }} - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
+                        <div>
+                            <form action="{% url 'tip_action' tip.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="delete">Delete</button>
+                                <button type="submit" name="action" value="upvote" {% if tip.is_upvoted %}disabled{% endif %}>Upvote</button>
+                                <button type="submit" name="action" value="downvote" {% if tip.is_downvoted %}disabled{% endif %}>Downvote</button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </ol>
                 <form action="" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
