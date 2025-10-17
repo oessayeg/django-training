@@ -34,7 +34,9 @@
                         <div>
                             <form action="{% url 'tip_action' tip.id %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit" name="action" value="delete">Delete</button>
+                                {% if tip.author.username == username  or tip.can_be_deleted %}
+                                    <button type="submit" name="action" value="delete">Delete</button>
+                                {% endif %}
                                 <button type="submit" name="action" value="upvote" {% if tip.is_upvoted %}disabled{% endif %}>Upvote</button>
                                 <button type="submit" name="action" value="downvote" {% if tip.is_downvoted %}disabled{% endif %}>Downvote</button>
                             </form>

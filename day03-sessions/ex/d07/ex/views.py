@@ -27,6 +27,9 @@ def ex(request):
         is_downvoted=Exists(
             models.User.objects.filter(downvoted_tips=OuterRef("pk"), username=username)
         ),
+        can_be_deleted=Exists(
+            models.User.objects.filter(username=username, can_delete_tips=True)
+        ),
     ).all()
     return render(
         request,
@@ -117,7 +120,8 @@ def tip_action(request, tip_id):
 
         if action == "delete":
             tip = models.Tip.objects.filter(id=tip_id).first()
-            if tip:
+            user = models.User.objects.filter(username=username).first()
+            if user.can_delete_tips or tip.author.username == username:
                 tip.delete()
         else:
             tip = models.Tip.objects.filter(id=tip_id).first()

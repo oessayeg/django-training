@@ -6,6 +6,7 @@ class User(models.Model):
     password = models.CharField(max_length=128, null=False)
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
+    can_delete_tips = models.BooleanField(default=False)
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
