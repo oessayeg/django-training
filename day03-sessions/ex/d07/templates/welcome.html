@@ -23,42 +23,37 @@
                 <a href="{% url 'registration' %}">Registration</a>
             </p>
             {% else %}
-            <div>
-                <p>Hello <span id="username">{{ username }} ({{ reputation }})</span>!</p>
-                <a href="{% url 'logout' %}">Logout</a>
-                    <ol>
-                        {% for tip in all_tips %}
-                        <li>{{ tip.content }} - Author: {{ tip.author.username }} ({{ tip.author_reputation }}) - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
-                        <div>
-                            <form action="{% url 'tip_action' tip.id %}" method="post">
-                                {% csrf_token %}
-                                {% if username == tip.author.username or reputation >= 30 or has_right_to_delete_tips %}
-                                <button type="submit" name="action" value="delete">Delete</button>
-                                {% endif %}
-                                <button type="submit" name="action" value="upvote" {% if tip.is_upvoted %}disabled{% endif %}>Upvote</button>
-                                {% if username == tip.author.username or reputation >= 15 or can_downvote_tips %}
-                                <button type="submit" name="action" value="downvote" {% if tip.is_downvoted %}disabled{% endif %}>Downvote</button>
-                                {% endif %}
-                            </form>
-                        </div>
-                        {% endfor %}
-                    </ol>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
+            <p>Hello <span id="username">{{ username }} ({{ reputation }})</span>!</p>
+            <a href="{% url 'logout' %}">Logout</a>
             {% endif %}
         </nav>
     </header>
     <main>
-        {% if not username %}
         <ol>
             {% for tip in all_tips %}
             <li>{{ tip.content }} - Author: {{ tip.author.username }} ({{ tip.author_reputation }}) - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
+            {% if username %}
+            <div>
+                <form action="{% url 'tip_action' tip.id %}" method="post">
+                    {% csrf_token %}
+                    {% if username == tip.author.username or reputation >= 30 or has_right_to_delete_tips %}
+                    <button type="submit" name="action" value="delete">Delete</button>
+                    {% endif %}
+                    <button type="submit" name="action" value="upvote" {% if tip.is_upvoted %}disabled{% endif %}>Upvote</button>
+                    {% if username == tip.author.username or reputation >= 15 or can_downvote_tips %}
+                    <button type="submit" name="action" value="downvote" {% if tip.is_downvoted %}disabled{% endif %}>Downvote</button>
+                    {% endif %}
+                </form>
+            </div>
+            {% endif %}
             {% endfor %}
         </ol>
+        {% if username %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
         {% endif %}
     </main>
    {% if not username %}
