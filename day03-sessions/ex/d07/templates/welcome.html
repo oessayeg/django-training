@@ -15,9 +15,7 @@
         <nav>
             <a href="/">Life Pro Tips</a>
             {% if not username %}
-            {% for tip in all_tips %}
-                <li>{{ tip }} - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
-            {% endfor %}
+            <p>Hello <span id="anonymous_username">{{ anonymous_username }}</span>!</p>
             <p>
                 <a href="{% url 'login' %}">Login</a>
             </p>
@@ -26,20 +24,20 @@
             </p>
             {% else %}
             <div>
-                <p>Hello <span id="username">{{ username }}</span>!</p>
+                <p>Hello <span id="username">{{ username }} ({{ reputation }})</span>!</p>
                 <a href="{% url 'logout' %}">Logout</a>
                     <ol>
                         {% for tip in all_tips %}
-                        <li>{{ tip }} - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
+                        <li>{{ tip.content }} - Author: {{ tip.author.username }} ({{ tip.author_reputation }}) - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
                         <div>
                             <form action="{% url 'tip_action' tip.id %}" method="post">
                                 {% csrf_token %}
-                                {% if tip.author.username == username  or tip.can_be_deleted %}
-                                    <button type="submit" name="action" value="delete">Delete</button>
+                                {% if username == tip.author.username or reputation >= 30 or has_right_to_delete_tips %}
+                                <button type="submit" name="action" value="delete">Delete</button>
                                 {% endif %}
                                 <button type="submit" name="action" value="upvote" {% if tip.is_upvoted %}disabled{% endif %}>Upvote</button>
-                                {% if tip.author.username == username or tip.can_be_downvoted %}
-                                    <button type="submit" name="action" value="downvote" {% if tip.is_downvoted %}disabled{% endif %}>Downvote</button>
+                                {% if username == tip.author.username or reputation >= 15 or can_downvote_tips %}
+                                <button type="submit" name="action" value="downvote" {% if tip.is_downvoted %}disabled{% endif %}>Downvote</button>
                                 {% endif %}
                             </form>
                         </div>
@@ -54,5 +52,35 @@
             {% endif %}
         </nav>
     </header>
+    <main>
+        {% if not username %}
+        <ol>
+            {% for tip in all_tips %}
+            <li>{{ tip.content }} - Author: {{ tip.author.username }} ({{ tip.author_reputation }}) - Total Upvotes: {{ tip.total_upvotes }} - Total Downvotes: {{ tip.total_downvotes }}</li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+    </main>
+   {% if not username %}
+    <script>
+        const anonymousUsernameElement = document.getElementById('anonymous_username');
+        
+        if (anonymousUsernameElement) {
+            function updateAnonymousUsername() {
+                fetch('/api/anonymous-username/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.anonymous_username) {
+                            anonymousUsernameElement.textContent = data.anonymous_username;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching anonymous username:', error));
+            }
+            
+            setInterval(updateAnonymousUsername, 2000);
+        }
+    </script>
+    {% endif %}
+
 </body>
 </html>

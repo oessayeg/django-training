@@ -2,10 +2,20 @@ from django.shortcuts import render, redirect
 from django.db.models import Count, Exists, OuterRef
 from . import forms
 from . import models
-
+from django.http import JsonResponse
+    
 
 def ex(request):
     username = request.session.get("username")
+    anonymous_username = request.session.get("anonymous_username")
+    reputation = 0
+    current_user = None
+    
+    if username:
+        current_user = models.User.objects.filter(username=username).first()
+        if current_user:
+            reputation = current_user.get_reputation()
+
     if username and request.method == "POST":
         tip_form = forms.TipForm(request.POST)
         if tip_form.is_valid():
@@ -17,6 +27,7 @@ def ex(request):
             return render(
                 request, "welcome.html", {"username": username, "form": tip_form}
             )
+
     tip_form = forms.TipForm()
     all_tips = models.Tip.objects.annotate(
         total_upvotes=Count("upvoted_by"),
@@ -27,17 +38,25 @@ def ex(request):
         is_downvoted=Exists(
             models.User.objects.filter(downvoted_tips=OuterRef("pk"), username=username)
         ),
-        can_be_deleted=Exists(
-            models.User.objects.filter(username=username, can_delete_tips=True)
-        ),
-        can_be_downvoted=Exists(
-            models.User.objects.filter(username=username, can_downvote_tips=True)
-        ),
-    ).all()
+    ).select_related('author').all()
+
+    tips_with_reputation = []
+    for tip in all_tips:
+        tip.author_reputation = tip.author.get_reputation()
+        tips_with_reputation.append(tip)
+
     return render(
         request,
         "welcome.html",
-        {"username": username, "form": tip_form, "all_tips": all_tips},
+        {
+            "username": username,
+            "anonymous_username": anonymous_username,
+            "form": tip_form,
+            "all_tips": tips_with_reputation,
+            "reputation": reputation,
+            "has_right_to_delete_tips": current_user.has_right_to_delete_tips,
+            "can_downvote_tips": current_user.can_downvote_tips,
+        },
     )
 
 
@@ -120,30 +139,30 @@ def tip_action(request, tip_id):
 
     if request.method == "POST":
         action = request.POST.get("action")
+        tip = models.Tip.objects.filter(id=tip_id).first()
+        user = models.User.objects.filter(username=username).first()
+
+        if not tip or not user:
+            return redirect("/")
+
+        is_author = user.username == tip.author.username
 
         if action == "delete":
-            tip = models.Tip.objects.filter(id=tip_id).first()
-            user = models.User.objects.filter(username=username).first()
-            if user.can_delete_tips or tip.author.username == username:
+            if is_author or user.can_delete_tips():
                 tip.delete()
         else:
-            tip = models.Tip.objects.filter(id=tip_id).first()
-            user = models.User.objects.filter(username=username).first()
+            is_upvoted = tip.upvoted_by.filter(username=username).exists()
+            is_downvoted = tip.downvoted_by.filter(username=username).exists()
 
-            if tip and user:
-                is_upvoted = tip.upvoted_by.filter(username=username).exists()
-                is_downvoted = tip.downvoted_by.filter(username=username).exists()
-
-                if action == "upvote":
-                    if is_upvoted:
-                        tip.upvoted_by.remove(user)
-                    else:
-                        if is_downvoted:
-                            tip.downvoted_by.remove(user)
-                        tip.upvoted_by.add(user)
-                elif action == "downvote" and (
-                    tip.author.username == username or user.can_downvote_tips
-                ):
+            if action == "upvote":
+                if is_upvoted:
+                    tip.upvoted_by.remove(user)
+                else:
+                    if is_downvoted:
+                        tip.downvoted_by.remove(user)
+                    tip.upvoted_by.add(user)
+            elif action == "downvote":
+                if is_author or user.can_downvote():
                     if is_downvoted:
                         tip.downvoted_by.remove(user)
                     else:
@@ -152,3 +171,12 @@ def tip_action(request, tip_id):
                         tip.downvoted_by.add(user)
 
     return redirect("/")
+
+
+def get_anonymous_username(request):
+    username = request.session.get("username")
+    if username:
+        return JsonResponse({"anonymous_username": None})
+    
+    anonymous_username = request.session.get("anonymous_username")
+    return JsonResponse({"anonymous_username": anonymous_username})
