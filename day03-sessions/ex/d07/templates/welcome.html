@@ -39,9 +39,9 @@
                     {% if username == tip.author.username or reputation >= 30 or has_right_to_delete_tips %}
                     <button type="submit" name="action" value="delete">Delete</button>
                     {% endif %}
-                    <button type="submit" name="action" value="upvote" {% if tip.is_upvoted %}disabled{% endif %}>Upvote</button>
+                    <button type="submit" name="action" value="upvote">Upvote</button>
                     {% if username == tip.author.username or reputation >= 15 or can_downvote_tips %}
-                    <button type="submit" name="action" value="downvote" {% if tip.is_downvoted %}disabled{% endif %}>Downvote</button>
+                    <button type="submit" name="action" value="downvote">Downvote</button>
                     {% endif %}
                 </form>
             </div>
