@@ -32,7 +32,7 @@ class User(models.Model):
 
     def can_downvote(self):
         return (
-            self.get_reputation() >= DOWNVOTE_REPUTATION_THRESHOLD or self.can_downvote
+            self.get_reputation() >= DOWNVOTE_REPUTATION_THRESHOLD or self.can_downvote_tips
         )
 
     def can_delete_tips(self):
