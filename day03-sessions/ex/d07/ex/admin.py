@@ -3,9 +3,9 @@ from .models import User, Tip
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'created', 'updated', 'can_delete_tips']
+    list_display = ['username', 'created', 'updated', 'can_delete_tips', 'can_downvote_tips']
     search_fields = ['username']
-    list_editable = ['can_delete_tips']
+    list_editable = ['can_delete_tips', 'can_downvote_tips']
     readonly_fields = ['created', 'updated']
 
 

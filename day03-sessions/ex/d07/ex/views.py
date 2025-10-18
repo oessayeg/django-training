@@ -30,6 +30,9 @@ def ex(request):
         can_be_deleted=Exists(
             models.User.objects.filter(username=username, can_delete_tips=True)
         ),
+        can_be_downvoted=Exists(
+            models.User.objects.filter(username=username, can_downvote_tips=True)
+        ),
     ).all()
     return render(
         request,
@@ -126,11 +129,11 @@ def tip_action(request, tip_id):
         else:
             tip = models.Tip.objects.filter(id=tip_id).first()
             user = models.User.objects.filter(username=username).first()
-            
+
             if tip and user:
                 is_upvoted = tip.upvoted_by.filter(username=username).exists()
                 is_downvoted = tip.downvoted_by.filter(username=username).exists()
-                
+
                 if action == "upvote":
                     if is_upvoted:
                         tip.upvoted_by.remove(user)
@@ -138,7 +141,9 @@ def tip_action(request, tip_id):
                         if is_downvoted:
                             tip.downvoted_by.remove(user)
                         tip.upvoted_by.add(user)
-                elif action == "downvote":
+                elif action == "downvote" and (
+                    tip.author.username == username or user.can_downvote_tips
+                ):
                     if is_downvoted:
                         tip.downvoted_by.remove(user)
                     else:

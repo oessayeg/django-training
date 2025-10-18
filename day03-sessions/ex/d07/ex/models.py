@@ -7,6 +7,7 @@ class User(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
     can_delete_tips = models.BooleanField(default=False)
+    can_downvote_tips = models.BooleanField(default=False)
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
