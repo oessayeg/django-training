@@ -54,8 +54,8 @@ def ex(request):
             "form": tip_form,
             "all_tips": tips_with_reputation,
             "reputation": reputation,
-            "has_right_to_delete_tips": current_user.has_right_to_delete_tips if current_user else False,
-            "can_downvote_tips": current_user.can_downvote_tips if current_user else False,
+            "can_delete": current_user.can_delete_tips() if current_user else False,
+            "can_downvote": current_user.can_downvote() if current_user else False,
         },
     )
 

@@ -3,10 +3,14 @@ from .models import User, Tip
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'created', 'updated', 'has_right_to_delete_tips', 'can_downvote_tips']
+    list_display = ['username', 'created', 'updated', 'get_reputation']
     search_fields = ['username']
     readonly_fields = ['created', 'updated']
-    list_editable = ['has_right_to_delete_tips', 'can_downvote_tips']
+    filter_horizontal = ['user_permissions']
+    
+    def get_reputation(self, obj):
+        return obj.get_reputation()
+    get_reputation.short_description = 'Reputation'
 
 
 @admin.register(Tip)
