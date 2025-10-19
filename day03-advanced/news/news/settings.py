@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'core',
     'ex00',
     'ex01',
+    'ex02',
 ]
 
 MIDDLEWARE = [
