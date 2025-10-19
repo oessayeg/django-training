@@ -1,0 +1,16 @@
+<nav>
+    <h1>Menu</h1>
+    <p>Logged in as {{ user.username }}</p>
+    <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'articles' %}">Last Articles</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'publications' %}">Publications</a></li>
+        <li><a href="{% url 'favorite_articles' %}">Favorite Articles</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'register' %}">Register</a></li>
+            <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+    </ul>
+</nav>

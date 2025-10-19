@@ -1,82 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article Details</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-            vertical-align: top;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            color: #333;
-        }
-        .add-to-favorite-container {
-            margin: 'auto';
-        }
-        .messages {
-            margin: 20px 0;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .messages .warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Details</h1>
-        
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Synopsis</th>
-                    <th>Content</th>
-                    <th>Created</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ article.title }}</td>
-                    <td>{{ article.author }}</td>
-                    <td>{{ article.synopsis }}</td>
-                    <td>{{ article.content }}</td>
-                    <td>{{ article.created }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="add-to-favorite-container">
-            <form action="{% url 'add_to_favorite' article.id %}" method="POST">
-                {% csrf_token %}
-                {{ form }}
-                <button type="submit">Add to favorites</button>
-            </form>
-        </div>
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #333;
+    }
+    .add-to-favorite-container {
+        margin: 'auto';
+    }
+    .messages {
+        margin: 20px 0;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    .messages .warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Details</h1>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
     </div>
-</body>
-</html>
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Synopsis</th>
+                <th>Content</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ article.title }}</td>
+                <td>{{ article.author }}</td>
+                <td>{{ article.synopsis }}</td>
+                <td>{{ article.content }}</td>
+                <td>{{ article.created }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="add-to-favorite-container">
+        <form action="{% url 'add_to_favorite' article.id %}" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Add to favorites</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Articles</title>
+{% extends 'base.html' %}
+
+{% block style %}
     <style>
         table {
             width: 100%;
@@ -23,17 +20,12 @@
             font-weight: bold;
             color: #333;
         }
-
-        .logout-container {
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            gap: 10px;
-            margin-top: 10px;
-        }
     </style>
-</head>
-<body>
+{% endblock %}
+
+
+{% block content %}
+
     <div class="container">
         <h1>Articles</h1>
         
@@ -56,9 +48,4 @@
             </tbody>
         </table>
     </div>
-    <div class="logout-container">
-        <button><a href="{% url 'publish' %}">Publish</a></button>
-        <a href="{% url 'logout' %}">Logout</a>
-    </div>
-</body>
-</html>
+{% endblock %}
