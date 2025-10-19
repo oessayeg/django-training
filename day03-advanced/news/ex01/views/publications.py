@@ -11,7 +11,7 @@ class PublicationsView(ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            return Article.objects.filter(author=user).all()
+            return Article.objects.filter(author=user).order_by('-created').all()
         raise PermissionDenied("Please login to view your publications")
 
 
@@ -45,5 +45,5 @@ class ArticleFavoriteView(ListView):
         user = self.request.user
 
         if user.is_authenticated:
-            return Article.objects.filter(userfavoritearticle__user=user)
+            return Article.objects.filter(userfavoritearticle__user=user).order_by('-created').all()
         raise PermissionDenied("Please login to view your favourite articles")

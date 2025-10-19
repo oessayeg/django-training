@@ -57,6 +57,7 @@
                 <th>Synopsis</th>
                 <th>Content</th>
                 <th>Created</th>
+                <th>Publication Time</th>
             </tr>
         </thead>
         <tbody>
@@ -66,6 +67,7 @@
                 <td>{{ article.synopsis }}</td>
                 <td>{{ article.content }}</td>
                 <td>{{ article.created }}</td>
+                <td>{{ article.created|timesince }} ago</td>
             </tr>
         </tbody>
     </table>

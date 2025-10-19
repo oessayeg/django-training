@@ -32,8 +32,9 @@
                 <tr>
                     <th>Title</th>
                     <th>Author</th>
-                    <th>Created</th>
                     <th>Synopsis</th>
+                    <th>Created</th>
+                    <th>Publication Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,8 +42,9 @@
                     <tr>
                         <td><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></td>
                         <td>{{ article.author }}</td>
+                        <td>{{ article.synopsis|truncatechars:20 }}</td>
                         <td>{{ article.created }}</td>
-                        <td>{{ article.synopsis }}</td>
+                        <td>{{ article.created|timesince }} ago</td>
                     </tr>
                 {% endfor %}
             </tbody>

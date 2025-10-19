@@ -6,3 +6,7 @@ from core.models import Article
 class ArticlesView(ListView):
     model = Article
     template_name = "ex00/articles.html"
+
+    def get_queryset(self):
+        return Article.objects.order_by('-created').all()
+
