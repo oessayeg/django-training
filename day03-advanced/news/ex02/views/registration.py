@@ -16,6 +16,6 @@ class RegistrationView(CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return super().form_valid(form)
+        self.object = form.save()
+        login(self.request, self.object)
+        return redirect(self.get_success_url())
