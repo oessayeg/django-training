@@ -13,6 +13,10 @@ class AddToFavoriteView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("publications")
     login_url = "login"
 
+    def get(self, request, *args, **kwargs):
+        article_id = self.kwargs.get('article_id')
+        return redirect('article_detail', article_id=article_id)
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['article'].widget = HiddenInput()
