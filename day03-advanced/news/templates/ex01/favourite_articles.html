@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Articles</title>
+    <style>
+        .logout-container {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Favorite Articles</h1>
+    <ul>
+        {% for article in object_list %}
+            <li><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="logout-container">
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</body>
+</html>

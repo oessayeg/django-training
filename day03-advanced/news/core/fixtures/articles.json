@@ -95,6 +95,70 @@
       "synopsis": "Comprehensive guide to testing Django applications. Learn about unit tests, integration tests, test fixtures, and continuous integration workflows.",
       "content": "Testing is not optional - it's an essential part of professional software development. Django provides excellent testing tools out of the box, making it easy to write comprehensive test suites for your applications.\n\nThis article covers the Django testing framework, including TestCase classes, test fixtures, factory patterns with factory_boy, and mocking external dependencies. We'll explore how to test models, views, forms, and API endpoints. You'll also learn about measuring test coverage, setting up continuous integration with GitHub Actions, and adopting test-driven development (TDD) practices. Writing good tests will save you countless hours of debugging and give you confidence when refactoring code."
     }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "article": 1
+    }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "article": 3
+    }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "article": 4
+    }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 4,
+    "fields": {
+      "user": 2,
+      "article": 2
+    }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 5,
+    "fields": {
+      "user": 2,
+      "article": 5
+    }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 6,
+    "fields": {
+      "user": 3,
+      "article": 1
+    }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 7,
+    "fields": {
+      "user": 3,
+      "article": 4
+    }
+  },
+  {
+    "model": "core.userfavoritearticle",
+    "pk": 8,
+    "fields": {
+      "user": 3,
+      "article": 5
+    }
   }
 ]
 
