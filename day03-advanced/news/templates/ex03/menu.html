@@ -1,6 +1,8 @@
 <nav>
     <h1>Menu</h1>
+    {% if user.is_authenticated %}
     <p>Logged in as {{ user.username }}</p>
+    {% endif %}
     <ul>
         <li><a href="{% url 'home' %}">Home</a></li>
         <li><a href="{% url 'articles' %}">Last Articles</a></li>
