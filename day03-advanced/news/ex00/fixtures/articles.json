@@ -1,0 +1,100 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "john_doe",
+      "password": "pbkdf2_sha256$1000000$BxdT7EFT58mVM3M5Fdi5Yl$+DzuswVfdSzlhMCvVcZhuQgIaCookW0XTyjhOTrWExw=",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john.doe@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "jane_smith",
+      "password": "pbkdf2_sha256$1000000$BxdT7EFT58mVM3M5Fdi5Yl$+DzuswVfdSzlhMCvVcZhuQgIaCookW0XTyjhOTrWExw=",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jane.smith@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-02-20T14:30:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "mike_johnson",
+      "password": "pbkdf2_sha256$1000000$BxdT7EFT58mVM3M5Fdi5Yl$+DzuswVfdSzlhMCvVcZhuQgIaCookW0XTyjhOTrWExw=",
+      "first_name": "Mike",
+      "last_name": "Johnson",
+      "email": "mike.johnson@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-03-10T09:15:00Z"
+    }
+  },
+  {
+    "model": "ex00.article",
+    "pk": 1,
+    "fields": {
+      "title": "Introduction to Django",
+      "author": 1,
+      "created": "2024-10-01T08:00:00Z",
+      "synopsis": "Learn the basics of Django web framework. This comprehensive guide covers models, views, templates, and URL routing to get you started with building web applications.",
+      "content": "Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It's free and open source.\n\nIn this article, we'll explore the fundamental concepts of Django including its MTV (Model-Template-View) architecture, ORM capabilities, and how to create your first Django project. We'll also cover best practices for structuring your application and managing dependencies."
+    }
+  },
+  {
+    "model": "ex00.article",
+    "pk": 2,
+    "fields": {
+      "title": "Advanced Python Techniques",
+      "author": 2,
+      "created": "2024-10-05T10:30:00Z",
+      "synopsis": "Discover advanced Python programming patterns and techniques. From decorators to context managers, learn how to write more elegant and efficient Python code.",
+      "content": "Python's simplicity is deceptive - beneath its clean syntax lies a wealth of powerful features that can dramatically improve your code. This article explores advanced concepts like decorators, generators, context managers, and metaclasses.\n\nWe'll dive deep into how these features work under the hood and when to use them in your projects. You'll learn how to write more Pythonic code that's both readable and performant. Whether you're building web applications, data pipelines, or automation scripts, these techniques will elevate your Python skills to the next level."
+    }
+  },
+  {
+    "model": "ex00.article",
+    "pk": 3,
+    "fields": {
+      "title": "Database Optimization Tips",
+      "author": 1,
+      "created": "2024-10-08T14:45:00Z",
+      "synopsis": "Master database optimization strategies to improve your application's performance. Learn about indexing, query optimization, and caching techniques.",
+      "content": "Database performance is critical for modern web applications. Slow queries can cripple even the most well-designed systems. This article covers essential optimization techniques including proper indexing strategies, query analysis, and the N+1 problem.\n\nWe'll explore how Django's ORM handles database queries and how to use select_related() and prefetch_related() to minimize database hits. You'll also learn about database connection pooling, caching strategies with Redis, and when to denormalize your data. These skills are essential for scaling your application to handle thousands of concurrent users."
+    }
+  },
+  {
+    "model": "ex00.article",
+    "pk": 4,
+    "fields": {
+      "title": "REST API Design Best Practices",
+      "author": 3,
+      "created": "2024-10-12T09:20:00Z",
+      "synopsis": "Build robust and scalable REST APIs following industry best practices. This guide covers resource naming, HTTP methods, versioning, and authentication.",
+      "content": "RESTful APIs have become the standard for web services, but designing them well requires understanding key principles. This article walks through the fundamentals of REST architecture and how to implement it effectively.\n\nWe'll discuss proper resource naming conventions, when to use different HTTP methods (GET, POST, PUT, PATCH, DELETE), how to handle pagination and filtering, and implementing authentication with JWT tokens. You'll also learn about API versioning strategies, error handling, and documentation with tools like Swagger. By following these best practices, you'll create APIs that are intuitive, maintainable, and easy to consume."
+    }
+  },
+  {
+    "model": "ex00.article",
+    "pk": 5,
+    "fields": {
+      "title": "Testing in Django Applications",
+      "author": 2,
+      "created": "2024-10-15T16:00:00Z",
+      "synopsis": "Comprehensive guide to testing Django applications. Learn about unit tests, integration tests, test fixtures, and continuous integration workflows.",
+      "content": "Testing is not optional - it's an essential part of professional software development. Django provides excellent testing tools out of the box, making it easy to write comprehensive test suites for your applications.\n\nThis article covers the Django testing framework, including TestCase classes, test fixtures, factory patterns with factory_boy, and mocking external dependencies. We'll explore how to test models, views, forms, and API endpoints. You'll also learn about measuring test coverage, setting up continuous integration with GitHub Actions, and adopting test-driven development (TDD) practices. Writing good tests will save you countless hours of debugging and give you confidence when refactoring code."
+    }
+  }
+]
+
