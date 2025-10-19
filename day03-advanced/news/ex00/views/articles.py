@@ -1,6 +1,6 @@
 from django.views.generic import ListView
 
-from ex00.models import Article
+from core.models import Article
 
 
 class ArticlesView(ListView):
