@@ -13,3 +13,4 @@ class LoginView(FormView):
         user = form.get_user()
         login(self.request, user)
         return super().form_valid(form)
+

@@ -10,7 +10,14 @@
         <li><a href="{% url 'logout' %}">Logout</a></li>
         {% else %}
             <li><a href="{% url 'register' %}">Register</a></li>
-            <li><a href="{% url 'login' %}">Login</a></li>
+            <li>
+                <strong>Login:</strong>
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    {{ login_form.as_p }}
+                    <button type="submit">Login</button>
+                </form>
+            </li>
         {% endif %}
     </ul>
 </nav>
