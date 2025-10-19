@@ -1,14 +1,17 @@
-from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.forms import HiddenInput
+from django.shortcuts import redirect
 from core.models import UserFavoriteArticle
 
 
-class AddToFavoriteView(CreateView):
+class AddToFavoriteView(LoginRequiredMixin, CreateView):
     model = UserFavoriteArticle
     fields = ["article"]
     success_url = reverse_lazy("publications")
+    login_url = "login"
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -23,8 +26,11 @@ class AddToFavoriteView(CreateView):
         return initial
 
     def form_valid(self, form):
-        user = self.request.user
-        if not user.is_authenticated:
-            raise PermissionDenied("Please login to add an article to your favorites")
-        form.instance.user = user
+        form.instance.user = self.request.user
+        article_id = self.kwargs.get('article_id')
+        
+        if UserFavoriteArticle.objects.filter(user=self.request.user, article_id=article_id).exists():
+            messages.warning(self.request, "This article is already in your favorites.")
+            return redirect('article_detail', article_id=article_id)
+        
         return super().form_valid(form)

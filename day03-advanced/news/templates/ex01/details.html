@@ -26,11 +26,29 @@
         .add-to-favorite-container {
             margin: 'auto';
         }
+        .messages {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .messages .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Details</h1>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
         
         <table>
             <thead>
