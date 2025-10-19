@@ -42,7 +42,7 @@
     }
   },
   {
-    "model": "ex00.article",
+    "model": "core.article",
     "pk": 1,
     "fields": {
       "title": "Introduction to Django",
@@ -53,7 +53,7 @@
     }
   },
   {
-    "model": "ex00.article",
+    "model": "core.article",
     "pk": 2,
     "fields": {
       "title": "Advanced Python Techniques",
@@ -64,7 +64,7 @@
     }
   },
   {
-    "model": "ex00.article",
+    "model": "core.article",
     "pk": 3,
     "fields": {
       "title": "Database Optimization Tips",
@@ -75,7 +75,7 @@
     }
   },
   {
-    "model": "ex00.article",
+    "model": "core.article",
     "pk": 4,
     "fields": {
       "title": "REST API Design Best Practices",
@@ -86,7 +86,7 @@
     }
   },
   {
-    "model": "ex00.article",
+    "model": "core.article",
     "pk": 5,
     "fields": {
       "title": "Testing in Django Applications",

@@ -9,9 +9,6 @@ class Article(models.Model):
     synopsis = models.CharField(max_length=312, null=False)
     content = models.TextField(null=False)
 
-    class Meta:
-        db_table = 'ex00_article'
-
     def __str__(self):
         return self.title
 
@@ -19,9 +16,6 @@ class Article(models.Model):
 class UserFavoriteArticle(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, null=False)
-
-    class Meta:
-        db_table = 'ex00_userfavoritearticle'
 
     def __str__(self):
         return f"{self.article.title}"
