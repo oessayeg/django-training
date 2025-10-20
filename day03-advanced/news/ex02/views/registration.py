@@ -15,6 +15,12 @@ class RegistrationView(CreateView):
             return redirect("publications")
         return super().dispatch(request, *args, **kwargs)
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        for field_name in form.fields:
+            form.fields[field_name].widget.attrs.update({'class': 'form-control'})
+        return form
+
     def form_valid(self, form):
         self.object = form.save()
         login(self.request, self.object)

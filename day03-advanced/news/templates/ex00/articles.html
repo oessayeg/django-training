@@ -1,53 +1,30 @@
 {% extends 'base.html' %}
 
-{% block style %}
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    
-    th, td {
-        border: 1px solid #ddd;
-        padding: 12px;
-        text-align: left;
-        vertical-align: top;
-    }
-    
-    th {
-        background-color: #f8f9fa;
-        font-weight: bold;
-        color: #333;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-    <div class="container">
-        <h1>Articles</h1>
-        
-        <table>
-            <thead>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Title</th>
+                <th>Synopsis</th>
+                <th>Writer</th>
+                <th>Created</th>
+                <th>When</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in object_list %}
                 <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Synopsis</th>
-                    <th>Created</th>
-                    <th>Publication Time</th>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.synopsis|truncatechars:20 }}</td>
+                    <td>{{ article.author }}</td>
+                    <td>{{ article.created|date:"N j, Y, P" }}</td>
+                    <td>{{ article.created|timesince }} ago</td>
+                    <td>
+                        <a href="{% url 'article_detail' article.id %}" class="btn btn-info btn-sm">Read</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for article in object_list %}
-                    <tr>
-                        <td><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></td>
-                        <td>{{ article.author }}</td>
-                        <td>{{ article.synopsis|truncatechars:20 }}</td>
-                        <td>{{ article.created }}</td>
-                        <td>{{ article.created|timesince }} ago</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
