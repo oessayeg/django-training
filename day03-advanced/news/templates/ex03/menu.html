@@ -1,49 +1,72 @@
+{% load i18n %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'articles' or request.resolver_match.url_name == 'home' %}active{% endif %}" 
-                       href="{% url 'articles' %}">Articles</a>
+                       href="{% url 'articles' %}">{% trans "Articles" %}</a>
                 </li>
 
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'favorite_articles' %}active{% endif %}" 
-                           href="{% url 'favorite_articles' %}">Favourites</a>
+                           href="{% url 'favorite_articles' %}">{% trans "Favourites" %}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'publications' %}active{% endif %}" 
-                           href="{% url 'publications' %}">Publications</a>
+                           href="{% url 'publications' %}">{% trans "Publications" %}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'publish' %}active{% endif %}" 
-                           href="{% url 'publish' %}">Publish</a>
+                           href="{% url 'publish' %}">{% trans "Publish" %}</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" 
-                           href="{% url 'register' %}">Register</a>
+                           href="{% url 'register' %}">{% trans "Register" %}</a>
                     </li>
                 {% endif %}
             </ul>
 
             <div class="d-flex align-items-center">
                 {% if user.is_authenticated %}
-                    <span class="navbar-text me-3">Logged as {{ user.username }}</span>
-                    <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
+                    <span class="navbar-text me-3">{% trans "Logged as" %} {{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">{% trans "Logout" %}</a>
                 {% else %}
                     {% if request.resolver_match.url_name != 'login' %}
                         <form method="post" action="{% url 'login' %}" class="login-form-inline">
                             {% csrf_token %}
                             <input type="text" name="{{ login_form.username.name }}" 
-                                   placeholder="username" class="form-control form-control-sm" required>
+                                   placeholder="{% trans 'username' %}" class="form-control form-control-sm" required>
                             <input type="password" name="{{ login_form.password.name }}" 
-                                   placeholder="password" class="form-control form-control-sm" required>
-                            <button type="submit" class="btn btn-outline-light btn-sm">Login</button>
+                                   placeholder="{% trans 'password' %}" class="form-control form-control-sm" required>
+                            <button type="submit" class="btn btn-outline-light btn-sm">{% trans "Login" %}</button>
                         </form>
                     {% endif %}
                 {% endif %}
+                
+                <div class="ms-3">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown">
+                            {% for language in languages %}
+                                {% if language.code == LANGUAGE_CODE %}{{ language.name }}{% endif %}
+                            {% endfor %}
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for language in languages %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'set_language' language.code %}">
+                                        {{ language.name_local }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

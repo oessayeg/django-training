@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-22 22:29+0000\n"
+"PO-Revision-Date: 2025-01-27 12:00+0000\n"
+"Last-Translator: Django Training\n"
+"Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+#: templates/base.html:7 templates/base.html:32 templates/ex03/menu.html:8
+msgid "Articles"
+msgstr "Artículos"
+
+#: templates/base.html:7 templates/base.html:32
+msgid "Share your writings"
+msgstr "Comparte tus escritos"
+
+#: templates/ex00/articles.html:8 templates/ex01/favourite_articles.html:7
+#: templates/ex01/publications.html:7
+msgid "Title"
+msgstr "Título"
+
+#: templates/ex00/articles.html:9 templates/ex01/favourite_articles.html:8
+#: templates/ex01/publications.html:8
+msgid "Synopsis"
+msgstr "Sinopsis"
+
+#: templates/ex00/articles.html:10 templates/ex01/favourite_articles.html:9
+#: templates/ex01/publications.html:9
+msgid "Writer"
+msgstr "Escritor"
+
+#: templates/ex00/articles.html:11 templates/ex01/favourite_articles.html:10
+#: templates/ex01/publications.html:10
+msgid "Created"
+msgstr "Creado"
+
+#: templates/ex00/articles.html:12 templates/ex01/favourite_articles.html:11
+#: templates/ex01/publications.html:11
+msgid "When"
+msgstr "Cuándo"
+
+#: templates/ex00/articles.html:23 templates/ex01/favourite_articles.html:22 templates/ex01/publications.html:22
+msgid "ago"
+msgstr "hace"
+
+#: templates/ex00/articles.html:25 templates/ex01/favourite_articles.html:24
+#: templates/ex01/publications.html:24
+msgid "Read"
+msgstr "Leer"
+
+#: templates/ex02/publish.html:7 templates/ex02/publish.html:23
+msgid "Publish Article"
+msgstr "Publicar Artículo"
+
+#: templates/ex03/menu.html:14
+msgid "Favourites"
+msgstr "Favoritos"
+
+#: templates/ex03/menu.html:18
+msgid "Publications"
+msgstr "Publicaciones"
+
+#: templates/ex03/menu.html:22
+msgid "Publish"
+msgstr "Publicar"
+
+#: templates/ex03/menu.html:27
+msgid "Register"
+msgstr "Registrarse"
+
+#: templates/ex03/menu.html:34
+msgid "Logged as"
+msgstr "Conectado como"
+
+#: templates/ex03/menu.html:35
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: templates/ex03/menu.html:41
+msgid "username"
+msgstr "nombre de usuario"
+
+#: templates/ex03/menu.html:43
+msgid "password"
+msgstr "contraseña"
+
+#: templates/ex03/menu.html:44
+msgid "Login"
+msgstr "Iniciar sesión"

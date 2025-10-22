@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
     <table class="table table-bordered">
         <thead class="table-light">
             <tr>
-                <th>Title</th>
-                <th>Synopsis</th>
-                <th>Writer</th>
-                <th>Created</th>
-                <th>When</th>
+                <th>{% trans "Title" %}</th>
+                <th>{% trans "Synopsis" %}</th>
+                <th>{% trans "Writer" %}</th>
+                <th>{% trans "Created" %}</th>
+                <th>{% trans "When" %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -19,9 +20,9 @@
                     <td>{{ article.synopsis|truncatechars:20 }}</td>
                     <td>{{ article.author }}</td>
                     <td>{{ article.created|date:"N j, Y, P" }}</td>
-                    <td>{{ article.created|timesince }} ago</td>
+                    <td>{{ article.created|timesince }} {% trans "ago" %}</td>
                     <td>
-                        <a href="{% url 'article_detail' article.id %}" class="btn btn-info btn-sm">Read</a>
+                        <a href="{% url 'article_detail' article.id %}" class="btn btn-info btn-sm">{% trans "Read" %}</a>
                     </td>
                 </tr>
             {% endfor %}
