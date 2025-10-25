@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <p class="logged-user-p">Logged as {{ user.get_full_name }}!</p>
+    <form class="logout-form" action="{% url 'logout' %}" method="POST">
+      {% csrf_token %}
+      <button type="submit" class="logout-button">Logout</button>
+    </form>
+    {% endif %}
+    <form class="login-form">
+      {% csrf_token %} {{ form.as_p }}
+      <button>Login</button>
+    </form>
+  </body>
+  <script>
+    const onLogoutClick = (loginFormElement, pElement, logoutButton) => {
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      const csrftoken = getCookie("csrftoken");
+
+      fetch('{% url "logout" %}', {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            if (pElement) {
+              pElement.remove();
+            }
+            logoutButton.remove();
+            loginFormElement.style.display = "block";
+          } else if (data.status === "error") {
+            const pElement = document.createElement("p");
+            pElement.innerHTML = `Logout failed: ${JSON.stringify(
+              data.errors
+            )}`;
+            document.body.appendChild(pElement);
+          }
+        });
+    };
+
+    const loginForm = document.querySelector(".login-form");
+
+    if (loginForm) {
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(loginForm);
+        const loginErrorP = document.querySelector(".login-error-p");
+        if (loginErrorP) {
+          loginErrorP.remove();
+        }
+        fetch("{% url 'account' %}", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              const loggedUser = data.logged_user;
+              const pElement = document.createElement("p");
+              const logoutButton = document.createElement("button");
+
+              pElement.innerHTML = `Logged as ${loggedUser}!`;
+              logoutButton.innerHTML = "Logout";
+
+              loginForm.style.display = "none";
+
+              document.body.appendChild(pElement);
+              document.body.appendChild(logoutButton);
+
+              logoutButton.addEventListener("click", () =>
+                onLogoutClick(loginForm, pElement, logoutButton)
+              );
+            } else if (data.status === "error") {
+              const pElement = document.createElement("p");
+              pElement.classList.add("login-error-p");
+              pElement.innerHTML = `Login failed: ${JSON.stringify(
+                data.errors
+              )}`;
+              document.body.appendChild(pElement);
+            }
+          })
+          .catch((error) => {
+            const pElement = document.createElement("p");
+            pElement.classList.add("login-error-p");
+            pElement.innerHTML = `Login failed: ${JSON.stringify(error)}`;
+            document.body.appendChild(pElement);
+          });
+      });
+    }
+    const logoutButton = document.querySelector(".logout-button");
+    const loggedUserP = document.querySelector(".logged-user-p");
+    if (loggedUserP) {
+      const loginForm = document.querySelector(".login-form");
+      loginForm.style.display = "none";
+    }
+    if (logoutButton) {
+      logoutButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        onLogoutClick(loginForm, loggedUserP, logoutButton);
+      });
+    }
+  </script>
+</html>
