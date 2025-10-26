@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ room_name }} Chat</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      #messages-container {
+        height: 400px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+      }
+      .message {
+        background-color: #e8f4fd;
+        border-left: 3px solid #2196f3;
+      }
+      .join-message {
+        background-color: #f0f0f0;
+        border-left: 3px solid #000000;
+      }
+      #message-form {
+        margin-top: 20px;
+      }
+      #message-form textarea {
+        width: 100%;
+        height: 60px;
+        resize: vertical;
+        margin-bottom: 10px;
+      }
+      #send-message-button {
+        background-color: #2196f3;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #send-message-button:hover {
+        background-color: #1976d2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{ room_name }} chat</h1>
+
+    <div id="messages-container">
+      <div id="messages-list"></div>
+    </div>
+
+    <form method="" id="message-form">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit" id="send-message-button">Send Message</button>
+    </form>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    const messages = [];
+
+    function displayMessage(data, shouldScroll) {
+      const messagesList = $("#messages-list");
+      const messageElement = $("<div>")
+        .addClass(data.type === "join_message" ? "join-message" : "message")
+        .css({
+          "margin-bottom": "10px",
+          padding: "8px",
+          "border-radius": "5px",
+          "background-color": "#f0f0f0",
+        });
+      const messageSender = data.type === "join_message" ? "" : `${data.user}:`;
+
+      const userElement = $("<strong>").text(messageSender);
+      const messageContent = $("<span>").text(data.message);
+
+      messageElement.append(userElement).append(messageContent);
+      messagesList.append(messageElement);
+
+      if (shouldScroll) {
+        const container = $("#messages-container");
+        // container.scrollTop(container[0].scrollHeight);
+      }
+    }
+
+    function displayAllMessages() {
+      const messagesList = $("#messages-list");
+      messagesList.empty();
+
+      messages.forEach(function (data) {
+        displayMessage(data, false);
+      });
+
+      const container = $("#messages-container");
+      container.scrollTop(container[0].scrollHeight);
+    }
+
+    $(document).ready(function () {
+      displayAllMessages();
+
+      const roomName = "{{ room_name }}";
+      const chatSocket = new WebSocket(
+        "ws://" + window.location.host + "/ws/chat/" + roomName + "/"
+      );
+
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+
+        if (data.type === "messages_history") {
+            messages.push(...data.messages);
+        } else {
+            messages.push(data);
+        }
+        displayAllMessages()
+      };
+
+      chatSocket.onclose = function (e) {
+        console.error("Chat socket closed unexpectedly");
+      };
+      $("#send-message-button").click(function (e) {
+        e.preventDefault();
+        const form = $("#message-form");
+        const textAreaInput = form.find("textarea[name='content']");
+        const message = textAreaInput.val();
+
+        if (message.length == 0) {
+          return;
+        }
+        chatSocket.send(
+          JSON.stringify({
+            message: message,
+          })
+        );
+        textAreaInput.val("");
+      });
+    });
+  </script>
+</html>

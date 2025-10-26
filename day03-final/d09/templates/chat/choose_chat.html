@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <h1>Hello!</h1>
+    <p>Choose a chat room:</p>
+    <ul>
+        {% for room in object_list %}
+            <li><a href="{% url 'chat' room.name %}">{{ room.name }}</a></li>
+        {% endfor %}
+        <!-- <li><a href="{% url 'chat' 'first_room' %}">Room 1</a></li>
+        <li><a href="{% url 'chat' 'second_room' %}">Room 2</a></li>
+        <li><a href="{% url 'chat' 'third_room' %}">Room 3</a></li> -->
+    </ul>
+</body>
+</html>
