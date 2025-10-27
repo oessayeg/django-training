@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ room_name }} Chat</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <style>
       body {
         font-family: Arial, sans-serif;
-        max-width: 800px;
+      }
+      .chat-container {
+        max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
       }
@@ -24,9 +30,13 @@
         background-color: #e8f4fd;
         border-left: 3px solid #2196f3;
       }
-      .join-message {
+      .join_message {
         background-color: #f0f0f0;
-        border-left: 3px solid #000000;
+        border-left: 3px solid green;
+      }
+      .leave_message {
+        background-color: #f0f0f0;
+        border-left: 3px solid red;
       }
       #message-form {
         margin-top: 20px;
@@ -48,45 +58,114 @@
       #send-message-button:hover {
         background-color: #1976d2;
       }
+      .users-sidebar {
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        padding: 15px;
+        height: fit-content;
+      }
+      .users-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .users-list li {
+        padding: 8px;
+        margin: 5px 0;
+        background-color: white;
+        border-left: 3px solid pink;
+        border-radius: 3px;
+      }
     </style>
   </head>
   <body>
-    <h1>{{ room_name }} chat</h1>
+    <div class="chat-container">
+      <h1 class="mb-4">{{ room_name }} chat</h1>
 
-    <div id="messages-container">
-      <div id="messages-list"></div>
+      <div class="row">
+        <div class="col-md-9">
+          <div id="messages-container">
+            <div id="messages-list"></div>
+          </div>
+
+          <form method="" id="message-form">
+            {% csrf_token %} {{ form.as_p }}
+            <button type="submit" id="send-message-button">Send Message</button>
+          </form>
+        </div>
+
+        <div class="col-md-3">
+          <div class="users-sidebar">
+            <h5 class="mb-3">Connected Users</h5>
+            <div id="users-count" class="mb-2 text-muted">
+              <small>0 users online</small>
+            </div>
+            <ul id="connected-users-list" class="users-list"></ul>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <form method="" id="message-form">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit" id="send-message-button">Send Message</button>
-    </form>
   </body>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     const messages = [];
+    let connectedUsers = [];
 
-    function displayMessage(data, shouldScroll) {
+    function displayMessage(data) {
       const messagesList = $("#messages-list");
-      const messageElement = $("<div>")
-        .addClass(data.type === "join_message" ? "join-message" : "message")
-        .css({
-          "margin-bottom": "10px",
-          padding: "8px",
-          "border-radius": "5px",
-          "background-color": "#f0f0f0",
-        });
-      const messageSender = data.type === "join_message" ? "" : `${data.user}:`;
+      const messageElement = $("<div>").addClass(data.type).css({
+        "margin-bottom": "10px",
+        padding: "8px",
+        "border-radius": "5px",
+        "background-color": "#f0f0f0",
+      });
+      const messageSender =
+        data.type === "join_message" || data.type === "leave_message"
+          ? ""
+          : `${data.user}:`;
 
       const userElement = $("<strong>").text(messageSender);
       const messageContent = $("<span>").text(data.message);
 
       messageElement.append(userElement).append(messageContent);
       messagesList.append(messageElement);
+    }
 
-      if (shouldScroll) {
-        const container = $("#messages-container");
-        // container.scrollTop(container[0].scrollHeight);
+    function updateConnectedUsers(data) {
+      if (
+        data.type === "join_message" &&
+        !connectedUsers.includes(data.username)
+      ) {
+        connectedUsers.push(data.username);
+      } else if (data.type === "leave_message") {
+        connectedUsers = [
+          ...connectedUsers.filter((user) => user !== data.username),
+        ];
+      }
+      renderConnectedUsers();
+    }
+
+    function renderConnectedUsers() {
+      const usersList = $("#connected-users-list");
+      const usersCount = $("#users-count");
+
+      usersList.empty();
+
+      usersCount
+        .find("small")
+        .text(
+          `${connectedUsers.length} user${
+            connectedUsers.length !== 1 ? "s" : ""
+          } online`
+        );
+
+      if (connectedUsers.length === 0) {
+        usersList.append($("<li>").text("No users online"));
+      } else {
+        connectedUsers.forEach(function (username) {
+          const userItem = $("<li>").text(username);
+          usersList.append(userItem);
+        });
       }
     }
 
@@ -95,7 +174,7 @@
       messagesList.empty();
 
       messages.forEach(function (data) {
-        displayMessage(data, false);
+        displayMessage(data);
       });
 
       const container = $("#messages-container");
@@ -113,12 +192,15 @@
       chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
 
+        updateConnectedUsers(data);
+
         if (data.type === "messages_history") {
-            messages.push(...data.messages);
+          messages.push(...data.messages);
         } else {
-            messages.push(data);
+          messages.push(data);
         }
-        displayAllMessages()
+
+        displayAllMessages();
       };
 
       chatSocket.onclose = function (e) {

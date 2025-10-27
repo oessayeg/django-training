@@ -63,10 +63,19 @@ class ChatConsumer(AuthenticatedWebSocketMixin, WebsocketConsumer):
                 "type": "join_message",
                 "user": self.scope["user"].username,
                 "message": f"{self.scope['user'].username} has joined the chat",
+                "username": self.scope["user"].username,
             },
         )
 
     def disconnect(self, close_code):
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                "type": "leave_message",
+                "message": f"{self.scope['user'].username} has left the chat",
+                "username": self.scope["user"].username,
+            },
+        )
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name, self.channel_name
         )
@@ -110,6 +119,18 @@ class ChatConsumer(AuthenticatedWebSocketMixin, WebsocketConsumer):
                 {
                     "type": "join_message",
                     "message": event["message"],
+                    "username": event["username"],
+                }
+            )
+        )
+
+    def leave_message(self, event):
+        self.send(
+            text_data=json.dumps(
+                {
+                    "type": event["type"],
+                    "message": event["message"],
+                    "username": event["username"],
                 }
             )
         )
