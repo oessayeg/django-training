@@ -3,4 +3,4 @@ from django.http import HttpRequest
 
 
 def markdown_info_view(request: HttpRequest):
-    return render(request, "markdown_info.html")
+    return render(request, "index.html")
