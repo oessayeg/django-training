@@ -1,7 +1,7 @@
 #!/bin/sh
 
-pip --version
+pip3 --version
 rm -rf local_lib
-pip install --target=local_lib git+https://github.com/jaraco/path > installation.log
+pip3 install --target=local_lib git+https://github.com/jaraco/path > installation.log
 
 python3 my_program.py

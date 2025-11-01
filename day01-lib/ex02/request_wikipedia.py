@@ -32,7 +32,7 @@ def write_to_file(file_name, result):
         f.write(result)
 
 
-if __name__ == "__main__":
+def main():
     try:
         if len(sys.argv) != 2:
             raise ValueError(
@@ -46,3 +46,7 @@ if __name__ == "__main__":
         write_to_file(search_query + ".wiki", result)
     except Exception as e:
         print(f"Error: {e}")
+
+
+if __name__ == "__main__":
+    main()
