@@ -75,7 +75,9 @@ WSGI_APPLICATION = 'd06.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'my_db',
+        'NAME': 'djangotraining',
+        'USER': 'djangouser',
+        'PASSWORD': 'secret',
         'HOST': 'localhost',
         'PORT': '5432',
     }

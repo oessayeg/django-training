@@ -9,6 +9,8 @@ DB_SETTINGS = settings.DATABASES["default"]
 HOST = DB_SETTINGS["HOST"]
 DATABASE = DB_SETTINGS["NAME"]
 PORT = DB_SETTINGS["PORT"]
+USER = DB_SETTINGS["USER"]
+PASSWORD = DB_SETTINGS["PASSWORD"]
 BASE_DIR = settings.BASE_DIR
 
 
@@ -17,6 +19,8 @@ def init(request):
         host=HOST,
         database=DATABASE,
         port=PORT,
+        user=USER,
+        password=PASSWORD,
     ) as connection:
         with connection.cursor() as cursor:
             try:
@@ -104,6 +108,8 @@ def populate(request):
         host=HOST,
         database=DATABASE,
         port=PORT,
+        user=USER,
+        password=PASSWORD,
     ) as connection:
         with connection.cursor() as cursor:
             for table in table_data:
@@ -127,6 +133,8 @@ def display(request):
         host=HOST,
         database=DATABASE,
         port=PORT,
+        user=USER,
+        password=PASSWORD,
     ) as connection:
         with connection.cursor() as cursor:
             try:

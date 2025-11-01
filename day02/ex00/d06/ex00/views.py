@@ -1,12 +1,21 @@
 from django.http import HttpResponse
 import psycopg2
+from d06 import settings
+
+HOST = settings.DATABASES["default"]["HOST"]
+DATABASE = settings.DATABASES["default"]["NAME"]
+PORT = settings.DATABASES["default"]["PORT"]
+USER = settings.DATABASES["default"]["USER"]
+PASSWORD = settings.DATABASES["default"]["PASSWORD"]
 
 
 def init(request):
     with psycopg2.connect(
-        host="localhost",
-        database="my_db",
-        port="5432",
+        host=HOST,
+        database=DATABASE,
+        port=PORT,
+        user=USER,
+        password=PASSWORD,
     ) as connection:
         with connection.cursor() as cursor:
             try:
