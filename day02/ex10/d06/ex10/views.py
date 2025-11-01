@@ -41,7 +41,7 @@ def ex10(request):
                 "characters__gender",
                 "characters__homeworld__name",
                 "characters__homeworld__diameter"
-            ).all()
+            ).distinct().all()
 
             if len(movie_data) == 0:
                 return HttpResponse("Nothing corresponding to your research")
